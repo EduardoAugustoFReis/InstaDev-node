@@ -31,7 +31,7 @@ module.exports = {
       gender: {
         type: Sequelize.STRING,
       },
-      password_has: {
+      password_hash: {
         type: Sequelize.STRING,
         allowNull: false,
       },
