@@ -72,7 +72,7 @@ class UserController{
         confirm_new_password,
       } = request.body;
 
-      const { userId } = request.params;
+      const { userId } = request;
 
       try {
 

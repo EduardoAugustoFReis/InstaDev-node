@@ -7,7 +7,7 @@ const authMiddleware = require("../app/middlewares/auth");
 routes.post("/", userController.create);
 
 routes.use(authMiddleware);
-routes.put("/:userId", userController.update);
+routes.put("/", userController.update);
 
 module.exports = routes;
 
