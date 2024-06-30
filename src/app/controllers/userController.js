@@ -145,6 +145,24 @@ class UserController{
 
     return response.status(200).json({message: "Usuário deletado"});
   }
+
+  async show(request, response){
+
+    const { userId } = request;
+
+    const user = await Users.findOne({
+      attributes: ["id", "name", "user_name", "email", "avatar", "bio", "gender"],
+      where: {
+        id: userId,
+      }
+    })
+
+    if(!user){
+      return response.status(400).json({message: "Usuário não encontrado."});
+    }
+
+    return response.status(200).json({ user });
+  } 
 }
 
 module.exports = new UserController();
