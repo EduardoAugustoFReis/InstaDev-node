@@ -1,6 +1,7 @@
 const Users = require("../models/Users");
 const yup = require("yup");
 const jwt = require("jsonwebtoken");
+const authConfig = require("../../configs/auth");
 
 class SessionController{
 
@@ -31,13 +32,13 @@ class SessionController{
         return response.json({error: "A senha não confer."})
       }
 
-      const { id, email: userEmail } = user;
+      const { id, name } = user;
 
-      const token = jwt.sign({id}, process.env.HASH_BCRYPT, {
-        expiresIn: "1d",
+      const token = jwt.sign({ id }, authConfig.secret, {
+        expiresIn: authConfig.expiresIn,
       })
 
-      return response.status(200).json({user: {id, email: userEmail} , token});
+      return response.status(200).json({user: {id, name} , token});
 
     } catch (error){
       if (error instanceof yup.ValidationError) {

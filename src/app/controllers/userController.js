@@ -1,5 +1,6 @@
 const Users = require("../models/Users");
 const yup = require("yup");
+const bcrypt = require("bcryptjs");
 
 class UserController{
 
@@ -59,6 +60,69 @@ class UserController{
     }
    
   };
+
+  async update(request, response){
+      const { 
+        name, 
+        avatar, 
+        bio, 
+        gender, 
+        old_password, 
+        new_password, 
+        confirm_new_password,
+      } = request.body;
+
+      const { userId } = request.params;
+
+      try {
+
+        const user = await Users.findOne({
+          where: {id: userId},
+        });
+
+        console.log(user);
+
+        if(!user){
+          return response.status(400).json({message: "Usuário não existe."});
+        }
+
+        let newPasswordHashed = "";
+      
+        if(old_password){
+          if(!await user.checkPassword(old_password)){
+            return response.status(401).json({error: "A senha antiga não confere."});
+          }
+
+          if(!new_password || !confirm_new_password){
+            return response.status(401).json({error: "É preciso informar a nova senha e confrima-la."});
+          }
+
+          if(new_password !== confirm_new_password){
+            return response.status(401).json({error: "A confirmação da senha não confere."});
+          }
+
+          newPasswordHashed = await bcrypt.hash(new_password, 8);
+        }
+
+        await Users.update(
+          {
+            name: name || user.name,
+            avatar: avatar || user.avatar,
+            bio: bio || user.bio,
+            gender: gender || user.gender,
+            password_hash: newPasswordHashed || user.password_hash,
+          },
+          {
+            where: { id:user.id },
+          }
+      ) 
+
+      return response.status(200).json({message: "Usuário atualizado."});
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({ message: "Erro interno do servidor." });
+    }
+  }
   
 }
 
