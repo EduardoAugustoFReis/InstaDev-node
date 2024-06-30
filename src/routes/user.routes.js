@@ -8,6 +8,7 @@ routes.post("/", userController.create);
 
 routes.use(authMiddleware);
 routes.put("/", userController.update);
+routes.delete("/", userController.delete);
 
 module.exports = routes;
 

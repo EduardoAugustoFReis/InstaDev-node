@@ -124,6 +124,27 @@ class UserController{
     }
   }
   
+  async delete(request, response){
+    const { userId } = request;
+
+    const user = await Users.findOne({
+      where: {
+        id: userId,
+      }
+    });
+
+    if(!user){
+    return response.status(400).json({message: "Usuário não encontrado."});
+    }
+
+    await user.destroy({
+      where: {
+        id: userId,
+      }
+    });
+
+    return response.status(200).json({message: "Usuário deletado"});
+  }
 }
 
 module.exports = new UserController();
