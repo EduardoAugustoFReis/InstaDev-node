@@ -163,6 +163,7 @@ class UserController{
 
     return response.status(200).json({ user });
   } 
+  
 }
 
 module.exports = new UserController();
