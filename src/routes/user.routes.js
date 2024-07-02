@@ -11,7 +11,7 @@ const authMiddleware = require("../app/middlewares/auth");
 routes.post("/", uploadConfig.single("image"), userController.create);
 
 routes.use(authMiddleware);
-routes.put("/", userController.update);
+routes.put("/", uploadConfig.single("image"), userController.update);
 routes.delete("/", userController.delete);
 routes.get("/", userController.show);
 

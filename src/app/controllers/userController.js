@@ -44,13 +44,11 @@ class UserController{
         avatar = request.file.filename;
       }
 
-      const hashedPassword = await bcrypt.hash(password, 8);
-
       const user = await Users.create({ 
         name, 
         user_name, 
         email, 
-        password: hashedPassword, 
+        password, 
         avatar 
       });
 
@@ -79,7 +77,6 @@ class UserController{
   async update(request, response){
       const { 
         name, 
-        avatar, 
         bio, 
         gender, 
         old_password, 
@@ -117,12 +114,18 @@ class UserController{
           }
 
           newPasswordHashed = await bcrypt.hash(new_password, 8);
+        } 
+
+        let avatar = user.avatar;
+
+        if(request.file){
+          avatar = request.file.filename;
         }
 
         await Users.update(
           {
             name: name || user.name,
-            avatar: avatar || user.avatar,
+            avatar: avatar,
             bio: bio || user.bio,
             gender: gender || user.gender,
             password_hash: newPasswordHashed || user.password_hash,
