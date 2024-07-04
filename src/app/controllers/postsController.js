@@ -85,6 +85,34 @@ class PostsController{
 
     return response.status(200).json({message: "Post update"});
   }
+
+  async addLike(request, response){
+    const { id } = request.params;
+
+    const verifyPost = await Posts.findOne({
+      where: {
+        id: id,
+      }
+    })
+
+    if(!verifyPost){
+      return response.status(404).json({message: "Post not exists."});
+    }
+
+    const updatePost = await Posts.update(
+    {
+      number_likes: verifyPost.number_likes + 1
+    }, 
+    {
+      where: { id }, 
+    });
+
+    if(!updatePost){
+      return response.status(400).json({message: "Failed to add like in this post."});
+    }
+
+    return response.status(200).json({ message: "Like storage." });
+  }
 }
 
 module.exports = new PostsController;

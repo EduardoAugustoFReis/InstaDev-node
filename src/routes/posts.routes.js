@@ -8,5 +8,6 @@ routes.use(authMiddleware);
 routes.post("/", postsController.create);
 routes.delete("/:id", postsController.delete);
 routes.put("/:id", postsController.update);
+routes.patch("/:id", postsController.addLike);
 
 module.exports = routes;
