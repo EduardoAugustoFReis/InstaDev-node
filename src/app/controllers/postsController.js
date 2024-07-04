@@ -49,6 +49,42 @@ class PostsController{
 
     return response.status(200).json({message: "Post deleted"});
   } 
+
+  async update(request, response){
+    const { image, description} = request.body;
+    const { id } = request.params;
+
+    const verifyPost = await Posts.findOne({
+      where: {
+        id: id,
+      }
+    });
+
+    if(!verifyPost){
+      return response.status(404).json({message: "Post not exists."});
+    }
+
+    if(verifyPost.author_id != request.userId){
+      return response.status(401).json(
+        {message: "This post does not belong you, you don't have permission to delete"}
+      );
+    }
+
+    const postUpdated = await Posts.update({
+      image,
+      description,
+    },
+    {
+      where: { id: id }
+    }
+  );
+    
+    if(!postUpdated){
+      return response.status(400).json({message: "Failed to update posts"});
+    }
+
+    return response.status(200).json({message: "Post update"});
+  }
 }
 
 module.exports = new PostsController;
