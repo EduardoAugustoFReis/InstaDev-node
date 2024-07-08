@@ -1,4 +1,5 @@
 const Posts = require("../models/Posts");
+const Users = require("../models/Users");
 
 class PostsController{
 
@@ -113,6 +114,47 @@ class PostsController{
 
     return response.status(200).json({ message: "Like storage." });
   }
+
+  async listMyPosts(request, response){
+
+    const allPosts = await Posts.findAll({
+      attributes: ["id", "image", "description", "number_likes"],
+      where: {
+        author_id: request.userId,
+      }
+    })
+
+    if(!allPosts){
+      return response.status(400).json({message: "Posts not found."});
+    }    
+
+    return response.status(200).json(allPosts);
+  }
+
+  async listAllPosts(request, response) {
+    try {
+      const allPosts = await Posts.findAll({
+        attributes: ["id", "description", "number_likes", "image"],
+        include: [
+          { 
+            model: Users, 
+            as: "user", 
+            required: true, 
+            attributes: ["id", "user_name"],
+          }
+        ],
+      });
+  
+      console.log('Todos os posts:', JSON.stringify(allPosts, null, 2));
+  
+      return response.status(200).json({ data: allPosts });
+    } catch (error) {
+      console.error("Erro ao listar todos os posts:", error);
+      return response.status(500).json({ error: "Erro ao listar todos os posts" });
+    }
+  }
+  
+  
 }
 
 module.exports = new PostsController;

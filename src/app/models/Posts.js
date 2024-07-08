@@ -2,27 +2,29 @@ const Sequelize = require("sequelize");
 const { Model } = require("sequelize");
 
 class Posts extends Model {
-  static init(sequelize){
-    super.init({
-      image: {
-        type: Sequelize.STRING,
-        allowNull: true, 
+  static init(sequelize) {
+    super.init(
+      {
+        image: {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
+        description: Sequelize.STRING,
+        number_likes: Sequelize.INTEGER,
+        author_id: Sequelize.INTEGER,
       },
-      description: Sequelize.STRING,
-      number_likes: Sequelize.INTEGER,
-      author_id: Sequelize.INTEGER,
-    },
-    {
-      sequelize,
-    },
-  );
+      {
+        sequelize,
+      }
+    );
 
-  return this;
+    return this;
   }
 
-  static associate(models){
+  static associate(models) {
     this.belongsTo(models.Users, { foreignKey: "author_id", as: "user" });
   }
-} 
+}
 
 module.exports = Posts;
+
