@@ -118,6 +118,9 @@ class PostsController{
   async listMyPosts(request, response){
 
     const allPosts = await Posts.findAll({
+      order: [
+        ["id", "DESC"],
+      ],
       attributes: ["id", "image", "description", "number_likes"],
       where: {
         author_id: request.userId,
@@ -134,6 +137,9 @@ class PostsController{
   async listAllPosts(request, response) {
     try {
       const allPosts = await Posts.findAll({
+        order: [
+          ["id", "DESC"],
+        ],
         attributes: ["id", "description", "number_likes", "image"],
         include: [
           { 
@@ -144,9 +150,7 @@ class PostsController{
           }
         ],
       });
-  
-      console.log('Todos os posts:', JSON.stringify(allPosts, null, 2));
-  
+    
       return response.status(200).json({ data: allPosts });
     } catch (error) {
       console.error("Erro ao listar todos os posts:", error);
